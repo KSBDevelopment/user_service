@@ -24,6 +24,7 @@ type CustomTextFormatter struct{}
 
 func (f *CustomTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	var color string
+	// Apply color based on the log level
 	switch entry.Level {
 	case logrus.InfoLevel:
 		color = Green
@@ -35,16 +36,20 @@ func (f *CustomTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		color = White
 	}
 
+	// Format the timestamp, log level, and message
 	timestamp := entry.Time.Format("2006-01-02 15:04:05")
 	level := strings.ToUpper(entry.Level.String())
 
-	logLine := fmt.Sprintf("%s[%s] %s%s%s: %s", color, timestamp, level, Reset, color, entry.Message)
+	// Color the log level and format the log as [timestamp] LEVEL: message
+	logLine := fmt.Sprintf("[%s] %s%s%s: %s", timestamp, color, level, Reset, entry.Message)
 
+	// Include any fields in the log entry
 	for key, value := range entry.Data {
 		logLine += fmt.Sprintf(" %s=%v", key, value)
 	}
 
-	return []byte(logLine + Reset + "\n"), nil
+	// Return the formatted log line
+	return []byte(logLine + "\n"), nil
 }
 
 var (
@@ -62,8 +67,10 @@ func InitLogger() {
 }
 
 func Middleware(c *gin.Context) {
+	// Get color for HTTP method
 	methodColor := getMethodColor(c.Request.Method)
 
+	// Log the incoming request
 	Instance.WithFields(logrus.Fields{
 		"method": fmt.Sprintf("%s%s%s", methodColor, c.Request.Method, Reset),
 		"path":   c.Request.URL.Path,
@@ -71,6 +78,7 @@ func Middleware(c *gin.Context) {
 
 	c.Next()
 
+	// Log after handling the request
 	statusCode := c.Writer.Status()
 	statusColor := getStatusColor(statusCode)
 

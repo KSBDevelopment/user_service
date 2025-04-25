@@ -1,4 +1,0 @@
-postgres:
-  user: ${POSTGRES_USER}
-  password: ${POSTGRES_PASSWORD}
-  db: ${POSTGRES_DB}
