@@ -7,5 +7,7 @@
     <file url="file://$PROJECT_DIR$/migrations/002_create_settings.up.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/migrations/003_create_follower_relations.down.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/migrations/003_create_follower_relations.up.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/migrations/004_alter_user_follower.down.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/migrations/004_alter_user_follower.up.sql" dialect="GenericSQL" />
   </component>
 </project>

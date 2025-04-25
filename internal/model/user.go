@@ -6,10 +6,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Username  string
-	AvatarURL string
-	Bio       string
-	Followers []FollowerRelation `gorm:"foreignKey:UserID"`
-	Following []FollowerRelation `gorm:"foreignKey:FollowerID"`
-	Settings  Settings           `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
+	Username       string
+	AvatarURL      string
+	Bio            string
+	FollowersCount uint               `gorm:"default:0"`
+	FollowingCount uint               `gorm:"default:0"`
+	Followers      []FollowerRelation `gorm:"foreignKey:UserID" json:"omitempty"`
+	Following      []FollowerRelation `gorm:"foreignKey:FollowerID" json:"omitempty"`
+	Settings       Settings           `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;" json:"omitempty"`
 }
