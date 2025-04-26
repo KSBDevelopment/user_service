@@ -13,10 +13,10 @@ type FollowerRelation struct {
 	UserID     uint
 	FollowerID uint
 	CreatedAt  time.Time
-	Status     string `gorm:"default:'pending'"`
+	Status     string `gorm:"default:'approved'"`
 }
 
-func NewFollowerRelation(userID, followerID uint) FollowerRelation {
+func NewPrivateFollowerRelation(userID, followerID uint) FollowerRelation {
 	return FollowerRelation{
 		UserID:     userID,
 		FollowerID: followerID,
