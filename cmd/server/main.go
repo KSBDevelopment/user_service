@@ -3,25 +3,26 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	"user_service/internal/config"
+	"user_service/internal/bootstrap"
+	"user_service/internal/routes"
 	"user_service/pkg/logging"
 )
 
 func main() {
 	logging.InitLogger()
 
-	cfg, err := config.LoadConfig()
+	bs, err := bootstrap.Init()
 	if err != nil {
 		logging.Instance.Error(err)
-		return
 	}
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	r.Use(logging.Middleware)
 
-	logging.Instance.Info("Starting application or port :" + cfg.Port)
-	err = r.Run(":" + cfg.Port)
+	routes.SetupRoutes(r, bs)
+	logging.Instance.Info("Starting application or port :" + bs.Config.Port)
+	err = r.Run(":" + bs.Config.Port)
 	if err != nil {
 		logging.Instance.Fatal(err)
 		return

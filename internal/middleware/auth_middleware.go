@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -29,13 +30,24 @@ func AuthMiddleware(jwtKey string) gin.HandlerFunc {
 			return
 		}
 
-		userID, okID := (*claims)["subject"].(float64)
+		// Extract "sub" as a string
+		userIDStr, okID := (*claims)["sub"].(string)
 		if !okID {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token data"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token data, could not get ID"})
 			c.Abort()
 			return
 		}
-		c.Set("user_id", int(userID))
+
+		// Convert the string to uint
+		userID, err := strconv.ParseUint(userIDStr, 10, 32) // 32-bit uint
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user ID format"})
+			c.Abort()
+			return
+		}
+
+		// Store the user ID as uint in context
+		c.Set("user_id", uint(userID)) // Store as uint
 		c.Next()
 	}
 }
